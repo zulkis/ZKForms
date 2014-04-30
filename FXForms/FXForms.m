@@ -1504,8 +1504,6 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
 
 @interface FXFormViewController ()
 
-@property (nonatomic, strong) FXFormController *formController;
-
 @end
 
 
