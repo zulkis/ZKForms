@@ -1450,7 +1450,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
 
 - (void)keyboardWillShow:(NSNotification *)note
 {
-    /*UITableViewCell *cell = [self cellContainingView:FXFormsFirstResponder(self.tableView)];
+    UITableViewCell *cell = [self cellContainingView:FXFormsFirstResponder(self.tableView)];
     if (cell && ![self.delegate isKindOfClass:[UITableViewController class]])
     {
         NSDictionary *keyboardInfo = [note userInfo];
@@ -1473,12 +1473,12 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
         NSIndexPath *selectedRow = [self.tableView indexPathForCell:cell];
         [self.tableView scrollToRowAtIndexPath:selectedRow atScrollPosition:UITableViewScrollPositionBottom animated:NO];
         [UIView commitAnimations];
-    }*/
+    }
 }
 
 - (void)keyboardWillHide:(NSNotification *)note
 {
-    /*UITableViewCell *cell = [self cellContainingView:FXFormsFirstResponder(self.tableView)];
+    UITableViewCell *cell = [self cellContainingView:FXFormsFirstResponder(self.tableView)];
     if (cell && ![self.delegate isKindOfClass:[UITableViewController class]])
     {
         NSDictionary *keyboardInfo = [note userInfo];
@@ -1496,7 +1496,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
         self.tableView.contentInset = tableContentInset;
         self.tableView.scrollIndicatorInsets = tableScrollIndicatorInsets;
         [UIView commitAnimations];
-    }*/
+    }
 }
 
 @end
