@@ -1358,7 +1358,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
 {
     FXFormField *field = [self fieldForIndexPath:indexPath];
     
-    if (_cellsForIndexPaths) {
+    if (!_cellsForIndexPaths) {
         _cellsForIndexPaths = [NSMutableDictionary new];
     }
     
