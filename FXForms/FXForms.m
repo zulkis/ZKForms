@@ -1375,9 +1375,13 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
         {
             style = UITableViewCellStyleValue1;
         }
-
-        //don't recycle cells - it would make things complicated
-        return [[cellClass alloc] initWithStyle:style reuseIdentifier:nil];
+        if (_cellsForIndexPaths) {
+            _cellsForIndexPaths = [NSMutableDictionary new];
+        }
+        if (!_cellsForIndexPaths[indexPath]) {
+            _cellsForIndexPaths[indexPath] = [[cellClass alloc] initWithStyle:style reuseIdentifier:nil];
+        }
+        return _cellsForIndexPaths[indexPath];
     }
 }
 
