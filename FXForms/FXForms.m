@@ -1357,13 +1357,19 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
 - (UITableViewCell *)tableView:(__unused UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     FXFormField *field = [self fieldForIndexPath:indexPath];
-
+    
+    if (_cellsForIndexPaths) {
+        _cellsForIndexPaths = [NSMutableDictionary new];
+    }
+    
     Class cellClass = field.cell ?: [self cellClassForFieldType:field.type];
     NSString *nibName = NSStringFromClass(cellClass);
     if ([[NSBundle mainBundle] pathForResource:nibName ofType:@"nib"])
     {
         //load cell from nib
-        return [[[NSBundle mainBundle] loadNibNamed:nibName owner:nil options:nil] firstObject];
+        if (!_cellsForIndexPaths[indexPath]) {
+            _cellsForIndexPaths[indexPath] = [[[NSBundle mainBundle] loadNibNamed:nibName owner:nil options:nil] firstObject];
+        }
     }
     else
     {
@@ -1377,14 +1383,11 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
         {
             style = UITableViewCellStyleValue1;
         }
-        if (_cellsForIndexPaths) {
-            _cellsForIndexPaths = [NSMutableDictionary new];
-        }
         if (!_cellsForIndexPaths[indexPath]) {
             _cellsForIndexPaths[indexPath] = [[cellClass alloc] initWithStyle:style reuseIdentifier:nil];
         }
-        return _cellsForIndexPaths[indexPath];
     }
+    return _cellsForIndexPaths[indexPath];
 }
 
 #pragma mark -
