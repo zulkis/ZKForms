@@ -1115,7 +1115,9 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
 #pragma mark Controllers
 
 
-@implementation FXFormController
+@implementation FXFormController {
+	NSMutableDictionary *_cellsForIndexPaths;
+}
 
 - (instancetype)init
 {
