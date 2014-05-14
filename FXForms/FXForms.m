@@ -1947,7 +1947,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     if ([self.firstInvokedTextFieldDelegate respondsToSelector:_cmd]) {
         return [self.firstInvokedTextFieldDelegate textFieldShouldEndEditing:textField];
     }
-    return NO;
+    return YES;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
