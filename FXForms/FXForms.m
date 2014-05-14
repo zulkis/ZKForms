@@ -1925,8 +1925,11 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     }
 }
 
-- (BOOL)textFieldShouldReturn:(__unused UITextField *)textField
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+    if ([self.firstInvokedTextFieldDelegate respondsToSelector:_cmd]) {
+        return [self.firstInvokedTextFieldDelegate textFieldShouldReturn:textField];
+    }
     if (self.textField.returnKeyType == UIReturnKeyNext)
     {
         [[self nextCell] becomeFirstResponder];
@@ -1938,8 +1941,21 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     return NO;
 }
 
-- (void)textFieldDidEndEditing:(__unused UITextField *)textField
+
+
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
+    if ([self.firstInvokedTextFieldDelegate respondsToSelector:_cmd]) {
+        return [self.firstInvokedTextFieldDelegate textFieldShouldEndEditing:textField];
+    }
+    return NO;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
 {
+    if ([self.firstInvokedTextFieldDelegate respondsToSelector:_cmd]) {
+        [self.firstInvokedTextFieldDelegate textFieldDidEndEditing:textField];
+        return;
+    }
     id value = self.textField.text;
     if ([self.field.type isEqualToString:FXFormFieldTypeNumber])
     {
@@ -1964,8 +1980,11 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     if (self.field.action) self.field.action(self);
 }
 
-- (BOOL)textFieldShouldBeginEditing:(__unused UITextField *)textField
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
+    if ([self.firstInvokedTextFieldDelegate respondsToSelector:_cmd]) {
+        return [self.firstInvokedTextFieldDelegate textFieldShouldBeginEditing:textField];
+    }
     //welcome to hacksville, population: you
     if (!self.returnKeyOverridden)
     {
@@ -1982,10 +2001,29 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     return YES;
 }
 
-- (void)textFieldDidBeginEditing:(__unused UITextField *)textField
+- (void)textFieldDidBeginEditing:(UITextField *)textField
 {
+    if ([self.firstInvokedTextFieldDelegate respondsToSelector:_cmd]) {
+        [self.firstInvokedTextFieldDelegate textFieldDidBeginEditing:textField];
+        return;
+    }
     [self.textField selectAll:nil];
 }
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    if ([self.firstInvokedTextFieldDelegate respondsToSelector:_cmd]) {
+        return [self.firstInvokedTextFieldDelegate textField:textField shouldChangeCharactersInRange:range replacementString:string];
+    }
+    return NO;
+}
+
+- (BOOL)textFieldShouldClear:(UITextField *)textField {
+    if ([self.firstInvokedTextFieldDelegate respondsToSelector:_cmd]) {
+        return [self.firstInvokedTextFieldDelegate textFieldShouldClear:textField];
+    }
+    return NO;
+}
+
 
 - (BOOL)canBecomeFirstResponder
 {
