@@ -2014,14 +2014,14 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     if ([self.firstInvokedTextFieldDelegate respondsToSelector:_cmd]) {
         return [self.firstInvokedTextFieldDelegate textField:textField shouldChangeCharactersInRange:range replacementString:string];
     }
-    return NO;
+    return YES;
 }
 
 - (BOOL)textFieldShouldClear:(UITextField *)textField {
     if ([self.firstInvokedTextFieldDelegate respondsToSelector:_cmd]) {
         return [self.firstInvokedTextFieldDelegate textFieldShouldClear:textField];
     }
-    return NO;
+    return YES;
 }
 
 
