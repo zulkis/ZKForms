@@ -1,7 +1,7 @@
 //
 //  FXForms.m
 //
-//  Version 1.1.6
+//  Version 1.1.7
 //
 //  Created by Nick Lockwood on 13/02/2014.
 //  Copyright (c) 2014 Charcoal Design. All rights reserved.
@@ -1393,7 +1393,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.editDataSource respondsToSelector:_cmd])
     {
-        [self.editDataSource tableView:tableView canEditRowAtIndexPath:indexPath];
+        return [self.editDataSource tableView:tableView canEditRowAtIndexPath:indexPath];
     }
     return NO;
 }
@@ -1451,7 +1451,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([self.delegate respondsToSelector:_cmd])
     {
-        [self.delegate tableView:tableView editingStyleForRowAtIndexPath:indexPath];
+        return [self.delegate tableView:tableView editingStyleForRowAtIndexPath:indexPath];
     }
     return UITableViewCellEditingStyleNone;
 }
@@ -1889,7 +1889,6 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     self.textLabel.frame = labelFrame;
     
 	CGRect textFieldFrame = self.textField.frame;
-
     textFieldFrame.size.height = CGRectGetHeight(self.contentView.bounds);
     textFieldFrame.origin.x = self.textLabel.frame.origin.x + MAX(FXFormFieldMinLabelWidth, self.textLabel.frame.size.width) + FXFormFieldLabelSpacing;
     textFieldFrame.origin.y = (self.contentView.bounds.size.height - textFieldFrame.size.height) / 2;
