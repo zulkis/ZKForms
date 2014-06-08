@@ -120,12 +120,20 @@ static NSString *const FXFormFieldTypeImage = @"image";
 
 @end
 
+@protocol FXFormControllerEditDataSource <NSObject>
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath;
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath;
+
+@end
+
 
 @interface FXFormController : NSObject
 
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) FXFormController *parentFormController;
 @property (nonatomic, weak) id<FXFormControllerDelegate> delegate;
+@property (nonatomic, weak) id<FXFormControllerEditDataSource> editDataSource;
 @property (nonatomic, strong) id<FXForm> form;
 
 - (NSUInteger)numberOfSections;

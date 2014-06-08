@@ -234,7 +234,7 @@ static inline NSArray *FXFormProperties(id<FXForm> form)
                     }
                 }
                 free(typeEncoding);
- 
+                
                 //add to properties
                 if (valueClass && valueType)
                 {
@@ -1139,7 +1139,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
                                        FXFormFieldTypeImage: [FXFormImagePickerCell class]} mutableCopy];
         
         _controllerClassesForFieldTypes = [@{FXFormFieldTypeDefault: [FXFormViewController class]} mutableCopy];
-                
+        
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(keyboardWillShow:)
                                                      name:UIKeyboardWillShowNotification
@@ -1390,13 +1390,28 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     return _cellsForIndexPaths[indexPath];
 }
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([self.editDataSource respondsToSelector:_cmd])
+    {
+        [self.editDataSource tableView:tableView canEditRowAtIndexPath:indexPath];
+    }
+    return NO;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([self.editDataSource respondsToSelector:_cmd])
+    {
+        [self.editDataSource tableView:tableView commitEditingStyle:editingStyle forRowAtIndexPath:indexPath];
+    }
+}
+
 #pragma mark -
 #pragma mark Delegate methods
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     FXFormField *field = [self fieldForIndexPath:indexPath];
-
+    
     //configure cell before setting field (in case it affects how value is displayed)
     [field.cellConfig enumerateKeysAndObjectsUsingBlock:^(NSString *keyPath, id value, __unused BOOL *stop) {
         [cell setValue:value forKeyPath:keyPath];
@@ -1431,6 +1446,14 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     {
         [self.delegate tableView:tableView didSelectRowAtIndexPath:indexPath];
     }
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if ([self.delegate respondsToSelector:_cmd])
+    {
+        [self.delegate tableView:tableView editingStyleForRowAtIndexPath:indexPath];
+    }
+    return UITableViewCellEditingStyleNone;
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
@@ -1839,7 +1862,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
                          @"textField.enablesReturnKeyAutomatically": ^(UITextField *f, NSInteger v){ f.enablesReturnKeyAutomatically = !!v; },
                          @"textField.secureTextEntry": ^(UITextField *f, NSInteger v){ f.secureTextEntry = !!v; }};
     });
-
+    
     void (^block)(UITextField *f, NSInteger v) = specialCases[keyPath];
     if (block)
     {
@@ -1866,6 +1889,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     self.textLabel.frame = labelFrame;
     
 	CGRect textFieldFrame = self.textField.frame;
+    textFieldFrame.size.height = CGRectGetHeight(self.contentView.bounds);
     textFieldFrame.origin.x = self.textLabel.frame.origin.x + MAX(FXFormFieldMinLabelWidth, self.textLabel.frame.size.width) + FXFormFieldLabelSpacing;
     textFieldFrame.origin.y = (self.contentView.bounds.size.height - textFieldFrame.size.height) / 2;
 	textFieldFrame.size.width = self.textField.superview.frame.size.width - textFieldFrame.origin.x - FXFormFieldPaddingRight;
@@ -1947,7 +1971,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     if ([self.firstInvokedTextFieldDelegate respondsToSelector:_cmd]) {
         return [self.firstInvokedTextFieldDelegate textFieldShouldEndEditing:textField];
     }
-    return NO;
+    return YES;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
@@ -1975,7 +1999,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     {
         value = [self.field.valueClass stringWithString:[value description]];
     }
-
+    
     self.field.value = value;
     if (self.field.action) self.field.action(self);
 }
@@ -2014,14 +2038,14 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     if ([self.firstInvokedTextFieldDelegate respondsToSelector:_cmd]) {
         return [self.firstInvokedTextFieldDelegate textField:textField shouldChangeCharactersInRange:range replacementString:string];
     }
-    return NO;
+    return YES;
 }
 
 - (BOOL)textFieldShouldClear:(UITextField *)textField {
     if ([self.firstInvokedTextFieldDelegate respondsToSelector:_cmd]) {
         return [self.firstInvokedTextFieldDelegate textFieldShouldClear:textField];
     }
-    return NO;
+    return YES;
 }
 
 
