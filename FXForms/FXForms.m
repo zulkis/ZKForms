@@ -1889,6 +1889,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     self.textLabel.frame = labelFrame;
     
 	CGRect textFieldFrame = self.textField.frame;
+
     textFieldFrame.size.height = CGRectGetHeight(self.contentView.bounds);
     textFieldFrame.origin.x = self.textLabel.frame.origin.x + MAX(FXFormFieldMinLabelWidth, self.textLabel.frame.size.width) + FXFormFieldLabelSpacing;
     textFieldFrame.origin.y = (self.contentView.bounds.size.height - textFieldFrame.size.height) / 2;
