@@ -1,7 +1,7 @@
 //
 //  FXForms.m
 //
-//  Version 1.1.7
+//  Version 1.1.6
 //
 //  Created by Nick Lockwood on 13/02/2014.
 //  Copyright (c) 2014 Charcoal Design. All rights reserved.
@@ -2116,6 +2116,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
 - (void)layoutSubviews
 {
     [super layoutSubviews];
+    self.detailTextLabel.hidden = ([self.textView.text length] > 0);
     
     CGRect labelFrame = self.textLabel.frame;
     labelFrame.origin.y = FXFormFieldPaddingTop;
