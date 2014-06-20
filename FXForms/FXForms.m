@@ -53,6 +53,7 @@ static const CGFloat FXFormFieldPaddingLeft = 10;
 static const CGFloat FXFormFieldPaddingRight = 10;
 static const CGFloat FXFormFieldPaddingTop = 12;
 static const CGFloat FXFormFieldPaddingBottom = 12;
+static const CGFloat FXFormFieldTextViewPaddingLeft = 6;
 
 
 static UIView *FXFormsFirstResponder(UIView *view)
@@ -1243,6 +1244,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
 - (void)setForm:(id<FXForm>)form
 {
     _form = form;
+    _cellsForIndexPaths = nil;
     self.sections = [FXFormSection sectionsWithForm:form controller:self];
 }
 
@@ -1296,8 +1298,9 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Warc-performSelector-leaks"
             
-            [responder performSelector:selector withObject:sender];
-            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [responder performSelector:selector withObject:sender];
+            });
 #pragma GCC diagnostic pop
             
             return;
@@ -1860,7 +1863,8 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
                          @"textField.keyboardAppearance": ^(UITextField *f, NSInteger v){ f.keyboardAppearance = v; },
                          @"textField.returnKeyType": ^(UITextField *f, NSInteger v){ f.returnKeyType = v; },
                          @"textField.enablesReturnKeyAutomatically": ^(UITextField *f, NSInteger v){ f.enablesReturnKeyAutomatically = !!v; },
-                         @"textField.secureTextEntry": ^(UITextField *f, NSInteger v){ f.secureTextEntry = !!v; }};
+                         @"textField.secureTextEntry": ^(UITextField *f, NSInteger v){ f.secureTextEntry = !!v; },
+                         @"textField.textAlignment": ^(UITextField *f, NSInteger v){ f.textAlignment = v; }};
     });
     
     void (^block)(UITextField *f, NSInteger v) = specialCases[keyPath];
@@ -2124,7 +2128,7 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     self.textLabel.frame = labelFrame;
     
 	CGRect textViewFrame = self.textView.frame;
-    textViewFrame.origin.x = FXFormFieldPaddingLeft;
+    textViewFrame.origin.x = FXFormFieldTextViewPaddingLeft;
     textViewFrame.origin.y = self.textLabel.frame.origin.y + self.textLabel.frame.size.height;
     textViewFrame.size.width = self.contentView.bounds.size.width - FXFormFieldPaddingLeft - FXFormFieldPaddingRight;
     CGSize textViewSize = [self.textView sizeThatFits:CGSizeMake(self.textView.frame.size.width, FLT_MAX)];
@@ -2138,6 +2142,8 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
     textViewFrame.origin.x += 5;
     textViewFrame.size.width -= 5;
     self.detailTextLabel.frame = textViewFrame;
+    
+    self.detailTextLabel.textColor = [UIColor colorWithRed:0.780f green:0.780f blue:0.803f alpha:1.000f];
     
     CGRect contentViewFrame = self.contentView.frame;
     contentViewFrame.size.height = self.textView.frame.origin.y + self.textView.frame.size.height + FXFormFieldPaddingBottom;
