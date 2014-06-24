@@ -2477,7 +2477,14 @@ static BOOL *FXFormSetValueForKey(id<FXForm> form, id value, NSString *key)
 {
     CGRect frame = self.imagePickerView.bounds;
     frame.size.height = self.bounds.size.height - 10;
-    frame.size.width = self.imagePickerView.image? self.imagePickerView.image.size.width / frame.size.height: 0;
+    if (self.imagePickerView.image) {
+        CGFloat imageWidth = self.imagePickerView.image.size.width;
+        CGFloat imageHeight = self.imagePickerView.image.size.height;
+        
+        frame.size.width = (imageWidth/imageHeight)*frame.size.height;
+    } else {
+        frame.size.width = 0;
+    }
     self.imagePickerView.bounds = frame;
     
     [super layoutSubviews];
